@@ -8,37 +8,106 @@ import (
 )
 
 const (
-	CollectionNmSyncTask = "sync_task"
+	CollectionNameSyncTask = "sync_task"
 
-	SyncTask_Field_ChainID = "chain_id"
-	SyncTask_Field_Height  = "height"
-	SyncTask_Field_Time    = "time"
-	SyncTask_Field_Syncing = "syncing"
+	// value of status
+	SyncTaskStatusUnHandled = "unhandled"
+	SyncTaskStatusUnderway  = "underway"
+	SyncTaskStatusCompleted = "completed"
+
+	// taskType
+	SyncTaskTypeCatchUp = "catch_up"
+	SyncTaskTypeFollow  = "follow"
 )
 
+type WorkerLog struct {
+	WorkerId  int64     `bson:"worker_id"`  // worker id
+	BeginTime time.Time `bson:"begin_time"` // time which worker begin handle this task
+}
+
 type SyncTask struct {
-	ChainID string    `bson:"chain_id"`
-	Height  int64     `bson:"height"`
-	Time    time.Time `bson:"time"`
-	Syncing bool      `bson:"syncing"`
+	ID             bson.ObjectId `bson:"_id"`
+	StartHeight    int64         `bson:"start_height"`   // task start height
+	EndHeight      int64         `bson:"end_height"`     // task end height
+	CurrentHeight  int64         `bson:"current_height"` // task current height
+	Status         string        `bson:"status"`         // task status
+	WorkerId       int64         `bson:"worker_id"`      // worker id
+	WorkerLogs     []WorkerLog   `bson:"worker_logs"`    // worker logs
+	LastUpdateTime time.Time     `bson:"last_update_time"`
 }
 
-func (c SyncTask) Name() string {
-	return CollectionNmSyncTask
+func (d SyncTask) Name() string {
+	return CollectionNameSyncTask
 }
 
-func (c SyncTask) PkKvPair() map[string]interface{} {
-	return bson.M{SyncTask_Field_ChainID: c.ChainID}
+func (d SyncTask) PkKvPair() map[string]interface{} {
+	return bson.M{"start_height": d.CurrentHeight, "end_height": d.EndHeight}
 }
 
-func QuerySyncTask() (SyncTask, error) {
-	result := SyncTask{}
+// get max block height in sync task
+func (d SyncTask) GetMaxBlockHeight() (int64, error) {
+	type maxHeightRes struct {
+		MaxHeight int64 `bson:"max"`
+	}
+	var res []maxHeightRes
 
-	query := func(c *mgo.Collection) error {
-		err := c.Find(bson.M{}).One(&result)
-		return err
+	q := []bson.M{
+		{
+			"$group": bson.M{
+				"_id": nil,
+				"max": bson.M{"$max": "$end_height"},
+			},
+		},
 	}
 
-	err := store.ExecCollection(CollectionNmSyncTask, query)
-	return result, err
+	getMaxBlockHeightFn := func(c *mgo.Collection) error {
+		return c.Pipe(q).All(&res)
+	}
+	err := store.ExecCollection(d.Name(), getMaxBlockHeightFn)
+
+	if err != nil {
+		return 0, err
+	}
+	if len(res) > 0 {
+		return res[0].MaxHeight, nil
+	}
+
+	return 0, nil
+}
+
+// query record by status
+func (d SyncTask) QueryAll(status []string, taskType string) ([]SyncTask, error) {
+	var syncTasks []SyncTask
+	q := bson.M{}
+
+	if len(status) > 0 {
+		q["status"] = bson.M{
+			"$in": status,
+		}
+	}
+
+	switch taskType {
+	case SyncTaskTypeCatchUp:
+		q["end_height"] = bson.M{
+			"$ne": 0,
+		}
+		break
+	case SyncTaskTypeFollow:
+		q["end_height"] = bson.M{
+			"$eq": 0,
+		}
+		break
+	}
+
+	fn := func(c *mgo.Collection) error {
+		return c.Find(q).All(&syncTasks)
+	}
+
+	err := store.ExecCollection(d.Name(), fn)
+
+	if err != nil {
+		return syncTasks, err
+	}
+
+	return syncTasks, nil
 }
