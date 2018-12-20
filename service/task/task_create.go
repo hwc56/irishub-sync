@@ -1,4 +1,4 @@
-package service
+package task
 
 import (
 	serverConf "github.com/irisnet/irishub-sync/conf/server"
@@ -11,17 +11,12 @@ import (
 	"time"
 )
 
-const (
-	goroutineNumCreateTask = 2
-)
+func StartCreateTask() {
+	var (
+		syncConfModel           document.SyncConf
+		blockNumPerWorkerHandle int64
+	)
 
-var (
-	syncTaskModel           document.SyncTask
-	syncConfModel           document.SyncConf
-	blockNumPerWorkerHandle int64
-)
-
-func Start() {
 	// get sync conf
 	syncConf, err := syncConfModel.GetConf(serverConf.ChainId)
 	if err != nil {
@@ -33,7 +28,7 @@ func Start() {
 	}
 
 	// buffer channel to limit goroutine num
-	chanLimit := make(chan bool, goroutineNumCreateTask)
+	chanLimit := make(chan bool, serverConf.WorkerNumCreateTask)
 
 	for {
 		chanLimit <- true
@@ -43,6 +38,7 @@ func Start() {
 
 func createTask(blockNumPerWorker int64, chanLimit chan bool) {
 	var (
+		syncTaskModel     document.SyncTask
 		syncTasks         []document.SyncTask
 		ops               []txn.Op
 		invalidFollowTask document.SyncTask
@@ -112,7 +108,7 @@ func createTask(blockNumPerWorker int64, chanLimit chan bool) {
 		followTask := validFollowTasks[0]
 		followedHeight := followTask.CurrentHeight
 		if followedHeight == 0 {
-			followedHeight = followTask.StartHeight
+			followedHeight = followTask.StartHeight - 1
 		}
 
 		currentBlockHeight, err := getCurrentBlockHeight()
@@ -160,23 +156,11 @@ func createTask(blockNumPerWorker int64, chanLimit chan bool) {
 	}
 
 	if len(ops) > 0 {
-		c := store.GetCollection(store.CollectionNameTxn)
-		runner := txn.NewRunner(c)
-
-		txObjectId := bson.NewObjectId()
-		err := runner.Run(ops, txObjectId, nil)
+		err := store.Txn(ops)
 		if err != nil {
-			if err == txn.ErrAborted {
-				err = runner.Resume(txObjectId)
-				if err != nil {
-					logger.Error("Resume transaction failed", logger.String("err", err.Error()))
-				}
-			} else {
-				logger.Error("Unknown while run create sync task transaction", logger.String("err", err.Error()))
-
-			}
+			logger.Error("Create sync task fail", logger.String("err", err.Error()))
 		} else {
-			logger.Info("create sync task success")
+			logger.Info("Create sync task success")
 		}
 	}
 }
@@ -191,7 +175,7 @@ func createCatchUpTask(maxEndHeight, blockNumPerWorker, currentBlockHeight int64
 			StartHeight:    maxEndHeight + 1,
 			EndHeight:      maxEndHeight + blockNumPerWorker,
 			Status:         document.SyncTaskStatusUnHandled,
-			LastUpdateTime: time.Now(),
+			LastUpdateTime: time.Now().Unix(),
 		}
 		syncTasks = append(syncTasks, syncTask)
 
@@ -203,6 +187,7 @@ func createCatchUpTask(maxEndHeight, blockNumPerWorker, currentBlockHeight int64
 
 func assertAllCatchUpTaskFinished() (bool, error) {
 	var (
+		syncTaskModel          document.SyncTask
 		allCatchUpTaskFinished = false
 	)
 
@@ -234,7 +219,7 @@ func createFollowTask(maxEndHeight, blockNumPerWorker, currentBlockHeight int64)
 			StartHeight:    maxEndHeight + 1,
 			EndHeight:      0,
 			Status:         document.SyncTaskStatusUnHandled,
-			LastUpdateTime: time.Now(),
+			LastUpdateTime: time.Now().Unix(),
 		}
 
 		syncTasks = append(syncTasks, syncTask)
