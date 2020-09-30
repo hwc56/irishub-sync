@@ -13,9 +13,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgStakeCreate).Type():
-		var msg types.MsgStakeCreate
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgStakeCreate)
 
 		txMsg := DocTxMsgStakeCreate{}
 		txMsg.BuildMsg(msg)

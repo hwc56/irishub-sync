@@ -5,7 +5,6 @@ import (
 	"github.com/irisnet/irishub-sync/types"
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store"
 )
 
@@ -25,9 +24,7 @@ func (m *DocMsgDefineService) Type() string {
 }
 
 func (m *DocMsgDefineService) BuildMsg(v interface{}) {
-	var msg types.MsgDefineService
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgDefineService)
 
 	m.Name = msg.Name
 	m.Description = msg.Description

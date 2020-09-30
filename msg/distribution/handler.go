@@ -4,7 +4,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/util/constant"
 )
 
@@ -12,12 +11,9 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgSetWithdrawAddress).Type():
-		var msg types.MsgSetWithdrawAddress
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 
 		txMsg := DocTxMsgSetWithdrawAddress{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -27,16 +23,13 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.DelegatorAddress.String()
-		docTx.To = msg.WithdrawAddress.String()
+		docTx.From = txMsg.DelegatorAddr
+		docTx.To = txMsg.WithdrawAddr
 		docTx.Type = constant.TxTypeSetWithdrawAddress
 	case new(types.MsgWithdrawDelegatorReward).Type():
-		var msg types.MsgWithdrawDelegatorReward
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 
 		txMsg := DocTxMsgWithdrawDelegatorReward{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -46,17 +39,14 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.DelegatorAddress.String()
-		docTx.To = msg.ValidatorAddress.String()
+		docTx.From = txMsg.DelegatorAddr
+		docTx.To = txMsg.ValidatorAddr
 		docTx.Type = constant.TxTypeWithdrawDelegatorReward
 
 	case new(types.MsgFundCommunityPool).Type():
-		var msg types.MsgFundCommunityPool
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 
 		txMsg := DocTxMsgFundCommunityPool{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -66,16 +56,13 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.Depositor.String()
-		docTx.Amount = types.ParseCoins(msg.Amount.String())
+		docTx.From = txMsg.Depositor
+		docTx.Amount = txMsg.Amount
 		docTx.Type = constant.TxTypeMsgFundCommunityPool
 	case new(types.MsgWithdrawValidatorCommission).Type():
-		var msg types.MsgWithdrawValidatorCommission
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 
 		txMsg := DocTxMsgWithdrawValidatorCommission{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -85,7 +72,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.ValidatorAddress.String()
+		docTx.From = txMsg.ValidatorAddr
 		docTx.Type = constant.TxTypeMsgWithdrawValidatorCommission
 	default:
 		ok = false

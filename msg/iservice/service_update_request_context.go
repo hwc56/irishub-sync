@@ -4,7 +4,6 @@ import (
 	"encoding/hex"
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	"github.com/irisnet/irishub-sync/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,7 +11,7 @@ import (
 
 type (
 	DocMsgUpdateRequestContext struct {
-		RequestContextID  string   `bson:"request_context_id" yaml:"request_context_id"`
+		RequestContextId  string   `bson:"request_context_id" yaml:"request_context_id"`
 		Providers         []string `bson:"providers" yaml:"providers"`
 		Consumer          string   `bson:"consumer" yaml:"consumer"`
 		ServiceFeeCap     Coins    `bson:"service_fee_cap" yaml:"service_fee_cap"`
@@ -27,10 +26,7 @@ func (m *DocMsgUpdateRequestContext) Type() string {
 }
 
 func (m *DocMsgUpdateRequestContext) BuildMsg(v interface{}) {
-	//msg := v.(MsgUpdateRequestContext)
-	var msg types.MsgUpdateRequestContext
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgUpdateRequestContext)
 
 	loadProviders := func() (ret []string) {
 		for _, one := range msg.Providers {
@@ -44,7 +40,7 @@ func (m *DocMsgUpdateRequestContext) BuildMsg(v interface{}) {
 		coins = append(coins, Coin{Denom: one.Denom, Amount: one.Amount.String()})
 	}
 
-	m.RequestContextID = hex.EncodeToString(msg.RequestContextID)
+	m.RequestContextId = hex.EncodeToString(msg.RequestContextId)
 	m.Providers = loadProviders()
 	m.Consumer = msg.Consumer.String()
 	m.ServiceFeeCap = coins

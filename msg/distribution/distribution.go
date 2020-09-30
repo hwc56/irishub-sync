@@ -17,7 +17,7 @@ func (doctx *DocTxMsgSetWithdrawAddress) Type() string {
 }
 
 func (doctx *DocTxMsgSetWithdrawAddress) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgSetWithdrawAddress)
+	msg := txMsg.(*types.MsgSetWithdrawAddress)
 	doctx.DelegatorAddr = msg.DelegatorAddress.String()
 	doctx.WithdrawAddr = msg.WithdrawAddress.String()
 }
@@ -33,7 +33,7 @@ func (doctx *DocTxMsgWithdrawDelegatorReward) Type() string {
 }
 
 func (doctx *DocTxMsgWithdrawDelegatorReward) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgWithdrawDelegatorReward)
+	msg := txMsg.(*types.MsgWithdrawDelegatorReward)
 	doctx.DelegatorAddr = msg.DelegatorAddress.String()
 	doctx.ValidatorAddr = msg.ValidatorAddress.String()
 }
@@ -49,7 +49,7 @@ func (doctx *DocTxMsgFundCommunityPool) Type() string {
 }
 
 func (doctx *DocTxMsgFundCommunityPool) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgFundCommunityPool)
+	msg := txMsg.(*types.MsgFundCommunityPool)
 	doctx.Depositor = msg.Depositor.String()
 	doctx.Amount = types.ParseCoins(msg.Amount.String())
 }
@@ -64,6 +64,6 @@ func (doctx *DocTxMsgWithdrawValidatorCommission) Type() string {
 }
 
 func (doctx *DocTxMsgWithdrawValidatorCommission) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgWithdrawValidatorCommission)
+	msg := txMsg.(*types.MsgWithdrawValidatorCommission)
 	doctx.ValidatorAddr = msg.ValidatorAddress.String()
 }

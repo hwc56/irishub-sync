@@ -5,7 +5,6 @@ import (
 	"github.com/irisnet/irishub-sync/types"
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 )
 
 type (
@@ -24,9 +23,7 @@ func (m *DocMsgBindService) Type() string {
 }
 
 func (m *DocMsgBindService) BuildMsg(v interface{}) {
-	var msg types.MsgBindService
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgBindService)
 
 	var coins Coins
 	for _, one := range msg.Deposit {

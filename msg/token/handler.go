@@ -4,7 +4,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/util/constant"
 )
 
@@ -12,9 +11,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgIssueToken).Type():
-		var msg types.MsgIssueToken
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgIssueToken)
 
 		txMsg := DocTxMsgIssueToken{}
 		txMsg.BuildMsg(msg)
@@ -30,9 +27,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		docTx.From = msg.Owner.String()
 		docTx.Type = constant.TxTypeAssetIssueToken
 	case new(types.MsgEditToken).Type():
-		var msg types.MsgEditToken
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgEditToken)
 
 		txMsg := DocTxMsgEditToken{}
 		txMsg.BuildMsg(msg)
@@ -48,9 +43,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		docTx.From = msg.Owner.String()
 		docTx.Type = constant.TxTypeAssetEditToken
 	case new(types.MsgMintToken).Type():
-		var msg types.MsgMintToken
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgMintToken)
 
 
 		txMsg := DocTxMsgMintToken{}
@@ -68,9 +61,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		docTx.To = msg.To.String()
 		docTx.Type = constant.TxTypeAssetMintToken
 	case new(types.MsgTransferTokenOwner).Type():
-		var msg types.MsgTransferTokenOwner
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgTransferTokenOwner)
 
 		txMsg := DocTxMsgTransferTokenOwner{}
 		txMsg.BuildMsg(msg)

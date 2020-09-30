@@ -6,13 +6,12 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store"
 )
 
 type DocMsgIssueDenom struct {
 	Sender string `bson:"sender"`
-	ID     string `bson:"id"`
+	Id     string `bson:"id"`
 	Name   string `bson:"name"`
 	Schema string `bson:"schema"`
 }
@@ -22,14 +21,12 @@ func (m *DocMsgIssueDenom) Type() string {
 }
 
 func (m *DocMsgIssueDenom) BuildMsg(v interface{}) {
-	var msg types.MsgIssueDenom
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgIssueDenom)
 
 	m.Sender = msg.Sender.String()
 	m.Schema = msg.Schema
 	m.Name = msg.Name
-	m.ID = strings.ToLower(msg.ID)
+	m.Id = strings.ToLower(msg.Id)
 }
 
 func (m *DocMsgIssueDenom) HandleTxMsg(msgData sdk.Msg, tx *document.CommonTx) *document.CommonTx {

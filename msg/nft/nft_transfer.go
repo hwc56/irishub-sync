@@ -4,7 +4,6 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"strings"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store"
@@ -16,7 +15,7 @@ type (
 		Recipient string `bson:"recipient"`
 		URI       string `bson:"uri"`
 		Denom     string `bson:"denom"`
-		ID        string `bson:"id"`
+		Id        string `bson:"id"`
 		Data      string `bson:"data"`
 	}
 )
@@ -26,13 +25,11 @@ func (m *DocMsgNFTTransfer) Type() string {
 }
 
 func (m *DocMsgNFTTransfer) BuildMsg(v interface{}) {
-	var msg types.MsgTransferNFT
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgTransferNFT)
 
 	m.Sender = msg.Sender.String()
 	m.Recipient = msg.Recipient.String()
-	m.ID = strings.ToLower(msg.ID)
+	m.Id = strings.ToLower(msg.Id)
 	m.Denom = strings.ToLower(msg.Denom)
 	m.URI = msg.URI
 	m.Data = msg.Data

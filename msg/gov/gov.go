@@ -34,7 +34,7 @@ func (doctx *DocTxMsgSubmitProposal) Type() string {
 }
 
 func (doctx *DocTxMsgSubmitProposal) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgSubmitProposal)
+	msg := txMsg.(*types.MsgSubmitProposal)
 	doctx.Content = Any{
 		TypeUrl: msg.Content.GetTypeUrl(),
 		//cachedValue:msg.Content.GetCachedValue(),
@@ -56,7 +56,7 @@ func (doctx *DocTxMsgVote) Type() string {
 }
 
 func (doctx *DocTxMsgVote) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgVote)
+	msg := txMsg.(*types.MsgVote)
 	doctx.Voter = msg.Voter.String()
 	doctx.Option = msg.Option.String()
 	doctx.ProposalID = msg.ProposalId
@@ -74,7 +74,7 @@ func (doctx *DocTxMsgDeposit) Type() string {
 }
 
 func (doctx *DocTxMsgDeposit) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgDeposit)
+	msg := txMsg.(*types.MsgDeposit)
 	doctx.Depositor = msg.Depositor.String()
 	doctx.Amount = types.ParseCoins(msg.Amount.String())
 	doctx.ProposalID = msg.ProposalId

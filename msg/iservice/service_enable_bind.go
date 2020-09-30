@@ -5,7 +5,6 @@ import (
 	"github.com/irisnet/irishub-sync/types"
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store"
 )
 
@@ -23,9 +22,7 @@ func (m *DocMsgEnableServiceBinding) Type() string {
 }
 
 func (m *DocMsgEnableServiceBinding) BuildMsg(v interface{}) {
-	var msg types.MsgEnableServiceBinding
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgEnableServiceBinding)
 
 	var coins store.Coins
 	for _, one := range msg.Deposit {

@@ -24,7 +24,7 @@ func (doctx *DocTxMsgSend) Type() string {
 }
 
 func (doctx *DocTxMsgSend) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgTransfer)
+	msg := txMsg.(*types.MsgTransfer)
 	doctx.FromAddress = msg.FromAddress.String()
 	doctx.ToAddress = msg.ToAddress.String()
 	doctx.Amount = types.ParseCoins(msg.Amount.String())
@@ -47,7 +47,7 @@ func (m *DocMsgMultiSend) Type() string {
 }
 
 func (m *DocMsgMultiSend) BuildMsg(v interface{}) {
-	msg := v.(types.MsgMultiSend)
+	msg := v.(*types.MsgMultiSend)
 	for _, one := range msg.Inputs {
 		m.Inputs = append(m.Inputs, Item{Address: one.Address.String(), Coins: types.ParseCoins(one.Coins.String())})
 		m.Temp = append(m.Temp, one.Address.String())

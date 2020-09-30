@@ -1,7 +1,6 @@
 package crisis
 
 import (
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
@@ -20,9 +19,7 @@ func (m *DocMsgVerifyInvariant) Type() string {
 }
 
 func (m *DocMsgVerifyInvariant) BuildMsg(v interface{}) {
-	var msg types.MsgVerifyInvariant
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgVerifyInvariant)
 
 	m.Sender = msg.Sender.String()
 	m.InvariantModuleName = msg.InvariantModuleName

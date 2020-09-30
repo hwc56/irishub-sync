@@ -5,8 +5,7 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
-	"github.com/irismod/service/types"
+	"github.com/irisnet/irismod/modules/service/types"
 	"github.com/irisnet/irishub-sync/store"
 )
 
@@ -24,12 +23,9 @@ func (m *DocMsgServiceResponse) Type() string {
 }
 
 func (m *DocMsgServiceResponse) BuildMsg(msg interface{}) {
-	//v := msg.(MsgRespondService)
-	var v types.MsgRespondService
-	data, _ := json.Marshal(msg)
-	json.Unmarshal(data, &v)
+	v := msg.(*types.MsgRespondService)
 
-	m.RequestID = hex.EncodeToString(v.RequestID)
+	m.RequestID = hex.EncodeToString(v.RequestId)
 	m.Provider = v.Provider.String()
 	//m.Output = hex.EncodeToString(v.Output)
 	m.Output = v.Output

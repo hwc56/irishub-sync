@@ -19,7 +19,7 @@ func (doctx *DocTxMsgAddLiquidity) Type() string {
 }
 
 func (doctx *DocTxMsgAddLiquidity) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgAddLiquidity)
+	msg := txMsg.(*types.MsgAddLiquidity)
 	doctx.Sender = msg.Sender.String()
 	doctx.MinLiquidity = msg.MinLiquidity.String()
 	doctx.ExactIrisAmt = msg.ExactStandardAmt.String()
@@ -40,7 +40,7 @@ func (doctx *DocTxMsgRemoveLiquidity) Type() string {
 }
 
 func (doctx *DocTxMsgRemoveLiquidity) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgRemoveLiquidity)
+	msg := txMsg.(*types.MsgRemoveLiquidity)
 	doctx.Sender = msg.Sender.String()
 	doctx.MinIrisAmt = msg.MinStandardAmt.String()
 	doctx.MinToken = msg.MinToken.String()
@@ -70,7 +70,7 @@ func (doctx *DocTxMsgSwapOrder) Type() string {
 }
 
 func (doctx *DocTxMsgSwapOrder) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgSwapOrder)
+	msg := txMsg.(*types.MsgSwapOrder)
 	doctx.Deadline = msg.Deadline
 	doctx.IsBuyOrder = msg.IsBuyOrder
 	doctx.Input = Input{

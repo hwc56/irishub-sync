@@ -4,24 +4,24 @@ import (
 	"fmt"
 	"github.com/irisnet/irishub-sync/logger"
 	"github.com/irisnet/irishub-sync/store"
-	token "github.com/irismod/token/types"
+	token "github.com/irisnet/irismod/modules/token/types"
 	auth "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bank "github.com/cosmos/cosmos-sdk/x/bank/types"
 	distribution "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	dtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	gov "github.com/cosmos/cosmos-sdk/x/gov/types"
-	rand "github.com/irisnet/irishub/modules/random/types"
-	oracle "github.com/irisnet/irishub/modules/oracle/types"
+	rand "github.com/irisnet/irismod/modules/random/types"
+	oracle "github.com/irisnet/irismod/modules/oracle/types"
 	slashing "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stake "github.com/cosmos/cosmos-sdk/x/staking/types"
 	staketypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	evidence "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	crisis "github.com/cosmos/cosmos-sdk/x/crisis/types"
-	coinswap "github.com/irismod/coinswap/types"
-	htlc "github.com/irismod/htlc/types"
-	nft "github.com/irismod/nft/types"
-	record "github.com/irismod/record/types"
-	service "github.com/irismod/service/types"
+	coinswap "github.com/irisnet/irismod/modules/coinswap/types"
+	htlc "github.com/irisnet/irismod/modules/htlc/types"
+	nft "github.com/irisnet/irismod/modules/nft/types"
+	record "github.com/irisnet/irismod/modules/record/types"
+	service "github.com/irisnet/irismod/modules/service/types"
 	guardian "github.com/irisnet/irishub/modules/guardian/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -148,7 +148,7 @@ var (
 	MustUnmarshalUBD        = staketypes.MustUnmarshalUBD
 
 	Bech32AccountAddrPrefix string
-	RegisterCodec           = sdk.RegisterCodec
+	//RegisterCodec           = sdk.RegisterCodec
 	AccAddressFromBech32    = sdk.AccAddressFromBech32
 	AccAddressFromHex       = sdk.AccAddressFromHex
 	//BondStatusToString      = types.BondStatusToString

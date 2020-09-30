@@ -21,7 +21,7 @@ func (doctx *DocTxMsgBeginRedelegate) Type() string {
 }
 
 func (doctx *DocTxMsgBeginRedelegate) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgBeginRedelegate)
+	msg := txMsg.(*types.MsgBeginRedelegate)
 	doctx.DelegatorAddr = msg.DelegatorAddress.String()
 	doctx.ValidatorSrcAddr = msg.ValidatorSrcAddress.String()
 	doctx.ValidatorDstAddr = msg.ValidatorDstAddress.String()
@@ -38,7 +38,7 @@ func (doctx *DocTxMsgUnjail) Type() string {
 }
 
 func (doctx *DocTxMsgUnjail) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgUnjail)
+	msg := txMsg.(*types.MsgUnjail)
 	doctx.ValidatorAddr = msg.ValidatorAddr.String()
 }
 
@@ -54,7 +54,7 @@ func (doctx *DocTxMsgBeginUnbonding) Type() string {
 }
 
 func (doctx *DocTxMsgBeginUnbonding) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgStakeBeginUnbonding)
+	msg := txMsg.(*types.MsgStakeBeginUnbonding)
 	doctx.ValidatorAddr = msg.ValidatorAddress.String()
 	doctx.DelegatorAddr = msg.DelegatorAddress.String()
 	doctx.SharesAmount = msg.Amount.String()
@@ -72,7 +72,7 @@ func (doctx *DocTxMsgDelegate) Type() string {
 }
 
 func (doctx *DocTxMsgDelegate) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgStakeDelegate)
+	msg := txMsg.(*types.MsgStakeDelegate)
 	doctx.ValidatorAddr = msg.ValidatorAddress.String()
 	doctx.DelegatorAddr = msg.DelegatorAddress.String()
 	doctx.Delegation = types.ParseCoin(msg.Amount.String())
@@ -90,7 +90,7 @@ func (doctx *DocTxMsgStakeEdit) Type() string {
 }
 
 func (doctx *DocTxMsgStakeEdit) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgStakeEdit)
+	msg := txMsg.(*types.MsgStakeEdit)
 	doctx.ValidatorAddr = msg.ValidatorAddress.String()
 	commissionRate := msg.CommissionRate
 	if commissionRate == nil {
@@ -115,7 +115,7 @@ func (doctx *DocTxMsgStakeCreate) Type() string {
 }
 
 func (doctx *DocTxMsgStakeCreate) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgStakeCreate)
+	msg := txMsg.(*types.MsgStakeCreate)
 	//pubKey, err := types.Bech32ifyValPub(msg.Pubkey)
 	//if err != nil {
 	//	pubKey = ""

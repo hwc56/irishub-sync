@@ -4,7 +4,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/util/constant"
 )
 
@@ -12,9 +11,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgCreateHTLC).Type():
-		var msg types.MsgCreateHTLC
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgCreateHTLC)
 
 		txMsg := DocTxMsgCreateHTLC{}
 		txMsg.BuildMsg(msg)
@@ -32,9 +29,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		docTx.Amount = types.ParseCoins(msg.Amount.String())
 		docTx.Type = constant.TxTypeCreateHTLC
 	case new(types.MsgClaimHTLC).Type():
-		var msg types.MsgClaimHTLC
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgClaimHTLC)
 
 		txMsg := DocTxMsgClaimHTLC{}
 		txMsg.BuildMsg(msg)
@@ -51,9 +46,7 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		docTx.To = ""
 		docTx.Type = constant.TxTypeClaimHTLC
 	case new(types.MsgRefundHTLC).Type():
-		var msg types.MsgRefundHTLC
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
+		msg := msgData.(*types.MsgRefundHTLC)
 
 		txMsg := DocTxMsgRefundHTLC{}
 		txMsg.BuildMsg(msg)

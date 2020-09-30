@@ -5,14 +5,13 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	"github.com/irisnet/irishub-sync/store"
 )
 
 type (
 	DocMsgPauseRequestContext struct {
-		RequestContextID string `bson:"request_context_id" yaml:"request_context_id"`
+		RequestContextId string `bson:"request_context_id" yaml:"request_context_id"`
 		Consumer         string `bson:"consumer" yaml:"consumer"`
 	}
 )
@@ -22,11 +21,9 @@ func (m *DocMsgPauseRequestContext) Type() string {
 }
 
 func (m *DocMsgPauseRequestContext) BuildMsg(v interface{}) {
-	var msg types.MsgPauseRequestContext
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgPauseRequestContext)
 
-	m.RequestContextID = hex.EncodeToString(msg.RequestContextID)
+	m.RequestContextId = hex.EncodeToString(msg.RequestContextId)
 	m.Consumer = msg.Consumer.String()
 }
 

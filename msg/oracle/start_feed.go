@@ -1,7 +1,6 @@
 package oracle
 
 import (
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store/document"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,10 +18,10 @@ func (m *DocMsgStartFeed) Type() string {
 }
 
 func (m *DocMsgStartFeed) BuildMsg(v interface{}) {
-	var msg types.MsgStartFeed
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
-
+	//var msg types.MsgStartFeed
+	//data, _ := json.Marshal(v)
+	//json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgStartFeed)
 	m.FeedName = msg.FeedName
 	m.Creator = msg.Creator.String()
 }

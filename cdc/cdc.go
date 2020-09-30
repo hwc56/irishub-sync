@@ -14,14 +14,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/evidence"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	"github.com/irisnet/irishub/modules/guardian"
-	"github.com/irisnet/irishub/modules/oracle"
-	"github.com/irisnet/irishub/modules/random"
-	"github.com/irismod/record"
-	"github.com/irismod/service"
-	"github.com/irismod/token"
-	"github.com/irismod/nft"
-	"github.com/irismod/coinswap"
-	"github.com/irismod/htlc"
+	"github.com/irisnet/irismod/modules/oracle"
+	"github.com/irisnet/irismod/modules/random"
+	"github.com/irisnet/irismod/modules/record"
+	"github.com/irisnet/irismod/modules/service"
+	"github.com/irisnet/irismod/modules/token"
+	"github.com/irisnet/irismod/modules/nft"
+	"github.com/irisnet/irismod/modules/coinswap"
+	"github.com/irisnet/irismod/modules/htlc"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 	"github.com/cosmos/cosmos-sdk/std"
 	ctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -60,7 +60,7 @@ func init() {
 	config.Seal()
 	types.Bech32AccountAddrPrefix = sdk.GetConfig().GetBech32AccountAddrPrefix()
 
-	amino := codec.New()
+	amino := codec.NewLegacyAmino()
 	interfaceRegistry := ctypes.NewInterfaceRegistry()
 	moduleBasics.RegisterInterfaces(interfaceRegistry)
 	sdk.RegisterInterfaces(interfaceRegistry)

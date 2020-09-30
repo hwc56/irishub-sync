@@ -41,7 +41,7 @@ func ParseTx(txBytes types.Tx, block *types.Block) *document.CommonTx {
 	memo := authTx.GetMemo()
 
 	// get tx signers
-	if len(authTx.GetSignatures()) > 0 {
+	if len(authTx.GetSigners()) > 0 {
 		for _, signature := range authTx.GetSigners() {
 			signer := document.Signer{}
 			signer.AddrHex = hex.EncodeToString([]byte(signature.String()))

@@ -4,7 +4,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/util/constant"
 )
 
@@ -12,12 +11,8 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgTransfer).Type():
-		var msg types.MsgTransfer
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
-
 		txMsg := DocTxMsgSend{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -27,16 +22,13 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.FromAddress.String()
-		docTx.To = msg.ToAddress.String()
-		docTx.Amount = types.ParseCoins(msg.Amount.String())
+		docTx.From = txMsg.FromAddress
+		docTx.To = txMsg.ToAddress
+		docTx.Amount = txMsg.Amount
 		docTx.Type = constant.TxTypeTransfer
 	case new(types.MsgMultiSend).Type():
-		var msg types.MsgMultiSend
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 		txMsg := DocMsgMultiSend{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,

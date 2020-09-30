@@ -6,7 +6,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	"github.com/irisnet/irishub-sync/store"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 )
 
 type (
@@ -29,9 +28,7 @@ func (m *DocMsgCallService) Type() string {
 }
 
 func (m *DocMsgCallService) BuildMsg(msg interface{}) {
-	var v types.MsgCallService
-	data, _ := json.Marshal(msg)
-	json.Unmarshal(data, &v)
+	v := msg.(*types.MsgCallService)
 
 	loadProviders := func() (ret []string) {
 		for _, one := range v.Providers {

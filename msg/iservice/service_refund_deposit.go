@@ -4,7 +4,6 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	"github.com/irisnet/irishub-sync/store"
 )
@@ -22,9 +21,7 @@ func (m *DocMsgRefundServiceDeposit) Type() string {
 }
 
 func (m *DocMsgRefundServiceDeposit) BuildMsg(v interface{}) {
-	var msg types.MsgRefundServiceDeposit
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgRefundServiceDeposit)
 
 	m.ServiceName = msg.ServiceName
 	m.Provider = msg.Provider.String()

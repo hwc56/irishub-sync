@@ -4,7 +4,6 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"strings"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store"
@@ -24,13 +23,11 @@ func (m *DocMsgNFTMint) Type() string {
 }
 
 func (m *DocMsgNFTMint) BuildMsg(v interface{}) {
-	var msg types.MsgMintNFT
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgMintNFT)
 
 	m.Sender = msg.Sender.String()
 	m.Recipient = msg.Recipient.String()
-	m.ID = strings.ToLower(msg.ID)
+	m.ID = strings.ToLower(msg.Id)
 	m.Denom = strings.ToLower(msg.Denom)
 	m.URI = msg.URI
 	m.Data = msg.Data

@@ -4,9 +4,8 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
-	"github.com/irisnet/irishub-sync/types"
 	"github.com/irisnet/irishub-sync/store"
+	"github.com/irisnet/irishub-sync/types"
 )
 
 type (
@@ -25,10 +24,7 @@ func (m *DocMsgUpdateServiceBinding) Type() string {
 }
 
 func (m *DocMsgUpdateServiceBinding) BuildMsg(v interface{}) {
-	//msg := v.(MsgUpdateServiceBinding)
-	var msg types.MsgUpdateServiceBinding
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgUpdateServiceBinding)
 
 	var coins Coins
 	for _, one := range msg.Deposit {

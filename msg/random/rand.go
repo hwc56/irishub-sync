@@ -18,7 +18,7 @@ func (doctx *DocTxMsgRequestRand) Type() string {
 }
 
 func (doctx *DocTxMsgRequestRand) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgRequestRandom)
+	msg := txMsg.(*types.MsgRequestRandom)
 	doctx.Consumer = msg.Consumer.String()
 	doctx.BlockInterval = msg.BlockInterval
 	doctx.Oracle = msg.Oracle

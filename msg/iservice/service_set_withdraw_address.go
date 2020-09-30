@@ -4,7 +4,6 @@ import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	"github.com/irisnet/irishub-sync/store"
 )
@@ -21,9 +20,7 @@ func (m *DocMsgServiceSetWithdrawAddress) Type() string {
 }
 
 func (m *DocMsgServiceSetWithdrawAddress) BuildMsg(v interface{}) {
-	var msg types.MsgSetWithdrawFeesAddress
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgSetWithdrawFeesAddress)
 
 	m.Owner = msg.Owner.String()
 	m.WithdrawAddress = msg.WithdrawAddress.String()

@@ -6,14 +6,13 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store"
 )
 
 type (
 	DocMsgNFTEdit struct {
 		Sender string `bson:"sender"`
-		ID     string `bson:"id"`
+		Id     string `bson:"id"`
 		Denom  string `bson:"denom"`
 		URI    string `bson:"uri"`
 		Data   string `bson:"data"`
@@ -25,12 +24,10 @@ func (m *DocMsgNFTEdit) Type() string {
 }
 
 func (m *DocMsgNFTEdit) BuildMsg(v interface{}) {
-	var msg types.MsgEditNFT
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgEditNFT)
 
 	m.Sender = msg.Sender.String()
-	m.ID = strings.ToLower(msg.ID)
+	m.Id = strings.ToLower(msg.Id)
 	m.Denom = strings.ToLower(msg.Denom)
 	m.URI = msg.URI
 	m.Data = msg.Data

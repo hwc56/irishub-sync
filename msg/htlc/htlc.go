@@ -22,7 +22,7 @@ func (doctx *DocTxMsgCreateHTLC) Type() string {
 }
 
 func (doctx *DocTxMsgCreateHTLC) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgCreateHTLC)
+	msg := txMsg.(*types.MsgCreateHTLC)
 	doctx.Sender = msg.Sender.String()
 	doctx.To = msg.To.String()
 	doctx.Amount = types.ParseCoins(msg.Amount.String())
@@ -43,7 +43,7 @@ func (doctx *DocTxMsgClaimHTLC) Type() string {
 }
 
 func (doctx *DocTxMsgClaimHTLC) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgClaimHTLC)
+	msg := txMsg.(*types.MsgClaimHTLC)
 	doctx.Sender = msg.Sender.String()
 	doctx.Secret = hex.EncodeToString(msg.Secret)
 	doctx.HashLock = hex.EncodeToString(msg.HashLock)
@@ -59,7 +59,7 @@ func (doctx *DocTxMsgRefundHTLC) Type() string {
 }
 
 func (doctx *DocTxMsgRefundHTLC) BuildMsg(txMsg interface{}) {
-	msg := txMsg.(types.MsgRefundHTLC)
+	msg := txMsg.(*types.MsgRefundHTLC)
 	doctx.Sender = msg.Sender.String()
 	doctx.HashLock = hex.EncodeToString(msg.HashLock)
 }

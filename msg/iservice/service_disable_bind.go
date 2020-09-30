@@ -5,7 +5,6 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store"
 )
 
@@ -22,9 +21,7 @@ func (m *DocMsgDisableServiceBinding) Type() string {
 }
 
 func (m *DocMsgDisableServiceBinding) BuildMsg(v interface{}) {
-	var msg types.MsgDisableServiceBinding
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgDisableServiceBinding)
 	m.ServiceName = msg.ServiceName
 	m.Provider = msg.Provider.String()
 	m.Owner = msg.Owner.String()

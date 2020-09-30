@@ -2,7 +2,6 @@ package oracle
 
 import (
 	"github.com/irisnet/irishub-sync/store"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
@@ -26,9 +25,7 @@ func (m *DocMsgEditFeed) Type() string {
 }
 
 func (m *DocMsgEditFeed) BuildMsg(v interface{}) {
-	var msg types.MsgCreateFeed
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgEditFeed)
 
 	m.FeedName = msg.FeedName
 	m.LatestHistory = msg.LatestHistory

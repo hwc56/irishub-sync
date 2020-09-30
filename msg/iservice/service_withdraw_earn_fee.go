@@ -3,7 +3,6 @@ package iservice
 import (
 	. "github.com/irisnet/irishub-sync/util/constant"
 	"github.com/irisnet/irishub-sync/store/document"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/store"
@@ -21,10 +20,7 @@ func (m *DocMsgWithdrawEarnedFees) Type() string {
 }
 
 func (m *DocMsgWithdrawEarnedFees) BuildMsg(v interface{}) {
-	//msg := v.(MsgWithdrawEarnedFees)
-	var msg types.MsgWithdrawEarnedFees
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgWithdrawEarnedFees)
 
 	m.Owner = msg.Owner.String()
 	m.Provider = msg.Provider.String()

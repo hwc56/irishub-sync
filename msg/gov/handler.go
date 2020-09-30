@@ -4,11 +4,9 @@ import (
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/util/constant"
 	"github.com/irisnet/irishub-sync/store"
 	"github.com/irisnet/irishub-sync/logger"
-	"gopkg.in/yaml.v2"
 	"strconv"
 )
 
@@ -16,11 +14,8 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 	ok := true
 	switch msgData.Type() {
 	case new(types.MsgSubmitProposal).Type():
-		var msg types.MsgSubmitProposal
-		yaml.Unmarshal([]byte(msgData.String()), &msg)
-
 		txMsg := DocTxMsgSubmitProposal{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -44,12 +39,8 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		}
 
 	case new(types.MsgDeposit).Type():
-		var msg types.MsgDeposit
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
-
 		txMsg := DocTxMsgDeposit{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -59,17 +50,14 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.Depositor.String()
-		docTx.Amount = types.ParseCoins(msg.Amount.String())
+		docTx.From = txMsg.Depositor
+		docTx.Amount = txMsg.Amount
 		docTx.Type = constant.TxTypeDeposit
-		docTx.ProposalId = msg.ProposalId
+		docTx.ProposalId = txMsg.ProposalID
 
 	case new(types.MsgVote).Type():
-		var msg types.MsgVote
-		data, _ := json.Marshal(msgData)
-		json.Unmarshal(data, &msg)
 		txMsg := DocTxMsgVote{}
-		txMsg.BuildMsg(msg)
+		txMsg.BuildMsg(msgData)
 		docTx.Msgs = append(docTx.Msgs, document.DocTxMsg{
 			Type: txMsg.Type(),
 			Msg:  &txMsg,
@@ -79,10 +67,10 @@ func HandleTxMsg(msgData sdk.Msg, docTx *document.CommonTx) (*document.CommonTx,
 		if len(docTx.Msgs) > 1 {
 			return docTx, true
 		}
-		docTx.From = msg.Voter.String()
+		docTx.From = txMsg.Voter
 		docTx.Amount = []store.Coin{}
 		docTx.Type = constant.TxTypeVote
-		docTx.ProposalId = msg.ProposalId
+		docTx.ProposalId = txMsg.ProposalID
 	default:
 		ok = false
 	}

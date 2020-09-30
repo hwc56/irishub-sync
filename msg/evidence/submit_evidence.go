@@ -1,7 +1,6 @@
 package evidence
 
 import (
-	"encoding/json"
 	"github.com/irisnet/irishub-sync/store/document"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/irisnet/irishub-sync/types"
@@ -22,9 +21,7 @@ func (m *DocMsgSubmitEvidence) Type() string {
 }
 
 func (m *DocMsgSubmitEvidence) BuildMsg(v interface{}) {
-	var msg types.MsgSubmitEvidence
-	data, _ := json.Marshal(v)
-	json.Unmarshal(data, &msg)
+	msg := v.(*types.MsgSubmitEvidence)
 
 	m.Submitter = msg.Submitter.String()
 	m.Evidence.TypeUrl = msg.Evidence.GetTypeUrl()
